@@ -29,20 +29,30 @@ func (root *ListNode) Delete(val int) {
 		fmt.Println("cannot delete root node")
 	}
 
-	currentPtr := root
-	var prevPtr *ListNode
-
-	for currentPtr.next != nil && currentPtr.val != val {
-		prevPtr = currentPtr
-		currentPtr = root.next
-	}
-
-	if prevPtr == nil || currentPtr.val != val {
-		fmt.Printf("node with value '%d' not found\n", val)
+	// if the value is in the root node, just set root to the next node
+	if root.val == val {
+		*root = *root.next
 		return
 	}
 
-	*prevPtr.next = *currentPtr.next
+	currentPtr := root
+	var prevPtr *ListNode
+
+	for currentPtr.next != nil {
+		prevPtr = currentPtr
+		currentPtr = currentPtr.next
+
+		// if the value is found, remove it and exit loop
+		if currentPtr.val == val {
+			prevPtr.next = currentPtr.next
+			break
+		}
+	}
+
+	if currentPtr.val != val {
+		fmt.Printf("node with value '%d' not found\n", val)
+		return
+	}
 }
 
 func (root *ListNode) Traverse() {
