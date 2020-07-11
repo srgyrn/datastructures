@@ -7,7 +7,7 @@ type ListNode struct {
 	next *ListNode
 }
 
-func NewSingleLinkedList(val int) *ListNode {
+func NewLinkedList(val int) *ListNode {
 	return &ListNode{
 		val:  val,
 		next: nil,
@@ -24,15 +24,15 @@ func (root *ListNode) Insert(val int) {
 	*root = *newPtr
 }
 
-func (root *ListNode) Delete(val int) {
+func (root *ListNode) Delete(val int) error {
 	if root.Size() == 1 {
-		fmt.Println("cannot delete root node")
+		return fmt.Errorf("cannot delete root node")
 	}
 
 	// if the value is in the root node, just set root to the next node
 	if root.val == val {
 		*root = *root.next
-		return
+		return nil
 	}
 
 	currentPtr := root
@@ -50,9 +50,10 @@ func (root *ListNode) Delete(val int) {
 	}
 
 	if currentPtr.val != val {
-		fmt.Printf("node with value '%d' not found\n", val)
-		return
+		return fmt.Errorf("node with value '%d' not found\n", val)
 	}
+
+	return nil
 }
 
 func (root *ListNode) Traverse() {

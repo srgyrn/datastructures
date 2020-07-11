@@ -5,16 +5,16 @@ import (
 	"github.com/srgyrn/datastructures/linkedlist/single"
 )
 
-type linkedlist interface {
+type Linkedlist interface {
 	Insert(val int)
-	Delete(val int)
+	Delete(val int) error
 	Traverse()
 	Size() int
 }
 
 func main() {
-	var singleLink linkedlist
-	singleLink = single.NewSingleLinkedList(1)
+	var singleLink Linkedlist
+	singleLink = single.NewLinkedList(1)
 	singleLink.Insert(2)
 	singleLink.Insert(3)
 	singleLink.Traverse()

@@ -30,12 +30,14 @@ func TestListNode_Delete(t *testing.T) {
 		name string
 		list *ListNode
 		args args
+		wantErr bool
 		want *ListNode
 	}{
 		{
 			name: "removes last inserted node",
 			args: args{5},
 			list: list,
+			wantErr: false,
 			want: &ListNode{
 				val: 4,
 				next: &ListNode{
@@ -54,6 +56,7 @@ func TestListNode_Delete(t *testing.T) {
 			name: "removes mid node",
 			list: list,
 			args: args{3},
+			wantErr: false,
 			want: &ListNode{
 				val: 4,
 				next: &ListNode{
@@ -69,21 +72,46 @@ func TestListNode_Delete(t *testing.T) {
 			name: "removes first node",
 			list: list,
 			args: args{1},
+			wantErr: false,
 			want: &ListNode{
 				val: 4,
 				next: &ListNode{
-					val: 2,
+					val:  2,
 					next: nil,
 				},
 			},
 		},
+		{
+			name: "returns error when there is only one node",
+			list: &ListNode{
+				val:  1,
+				next: nil,
+			},
+			args: args{1},
+			wantErr: true,
+			want: &ListNode{
+				val:  1,
+				next: nil,
+			},
+		},
+		{
+			name:    "returns error when node is not found",
+			list:    list,
+			args:    args{10},
+			wantErr: true,
+			want:    list,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.list.Delete(tt.args.val)
+			err := tt.list.Delete(tt.args.val)
+
+			if tt.wantErr && err == nil {
+				t.Errorf("expecting error, nil returned")
+			}
 
 			if !reflect.DeepEqual(tt.list, tt.want) {
-				t.Errorf("Delete() got: %v, want: %v", tt.list, tt.want)
+				t.Errorf("delete() got: %v, want: %v", tt.list, tt.want)
 			}
 		})
 	}
@@ -128,7 +156,7 @@ func TestListNode_Insert(t *testing.T) {
 			}
 
 			if !reflect.DeepEqual(want, root) {
-				t.Errorf("Insert() want: %v, got: %v", want, root)
+				t.Errorf("insert() want: %v, got: %v", want, root)
 			}
 		})
 	}
@@ -169,7 +197,7 @@ func TestListNode_Size(t *testing.T) {
 			}
 
 			if got := root.Size(); got != tt.want {
-				t.Errorf("Size() = %v, want %v", got, tt.want)
+				t.Errorf("size() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -197,8 +225,8 @@ func TestNewSingleLinkedList(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewSingleLinkedList(tt.args.val); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewSingleLinkedList() = %v, want %v", got, tt.want)
+			if got := NewLinkedList(tt.args.val); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("newSingleLinkedList() = %v, want %v", got, tt.want)
 			}
 		})
 	}
