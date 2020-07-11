@@ -1,6 +1,8 @@
 package single
 
 import (
+	"io/ioutil"
+	"os"
 	"reflect"
 	"testing"
 )
@@ -27,16 +29,16 @@ func TestListNode_Delete(t *testing.T) {
 		val int
 	}
 	tests := []struct {
-		name string
-		list *ListNode
-		args args
+		name    string
+		list    *ListNode
+		args    args
 		wantErr bool
-		want *ListNode
+		want    *ListNode
 	}{
 		{
-			name: "removes last inserted node",
-			args: args{5},
-			list: list,
+			name:    "removes last inserted node",
+			args:    args{5},
+			list:    list,
 			wantErr: false,
 			want: &ListNode{
 				val: 4,
@@ -53,9 +55,9 @@ func TestListNode_Delete(t *testing.T) {
 			},
 		},
 		{
-			name: "removes mid node",
-			list: list,
-			args: args{3},
+			name:    "removes mid node",
+			list:    list,
+			args:    args{3},
 			wantErr: false,
 			want: &ListNode{
 				val: 4,
@@ -69,9 +71,9 @@ func TestListNode_Delete(t *testing.T) {
 			},
 		},
 		{
-			name: "removes first node",
-			list: list,
-			args: args{1},
+			name:    "removes first node",
+			list:    list,
+			args:    args{1},
 			wantErr: false,
 			want: &ListNode{
 				val: 4,
@@ -87,7 +89,7 @@ func TestListNode_Delete(t *testing.T) {
 				val:  1,
 				next: nil,
 			},
-			args: args{1},
+			args:    args{1},
 			wantErr: true,
 			want: &ListNode{
 				val:  1,
@@ -229,5 +231,33 @@ func TestNewSingleLinkedList(t *testing.T) {
 				t.Errorf("newSingleLinkedList() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestListNode_Traverse(t *testing.T) {
+	list := &ListNode{
+		val: 3,
+		next: &ListNode{
+			val: 2,
+			next: &ListNode{
+				val:  1,
+				next: nil,
+			},
+		},
+	}
+
+	stdout := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	list.Traverse()
+
+	w.Close()
+	got, _ := ioutil.ReadAll(r)
+	os.Stdout = stdout
+
+	want := "3-->2-->1-->nil\n"
+	if string(got) != want {
+		t.Errorf("traverse() failed. got: %v, want: %v", string(got), want)
 	}
 }
