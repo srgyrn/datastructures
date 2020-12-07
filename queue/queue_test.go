@@ -46,6 +46,12 @@ func Test_queue_enqueue(t *testing.T) {
 
 func Test_queue_dequeue(t *testing.T) {
 	q := new(queue)
+
+	if got := q.dequeue(); got != "" || !reflect.DeepEqual(q, new(queue)) {
+		t.Errorf("empty queue.pop() failed")
+		return
+	}
+
 	q.enqueue("first node")
 	q.enqueue("second node")
 	q.enqueue("third node")

@@ -29,6 +29,10 @@ func (q *queue) enqueue(v string) {
 }
 
 func (q *queue) dequeue() string {
+	if q.isEmpty() {
+		return ""
+	}
+
 	res := q.front.value
 	q.length--
 	q.front = q.front.next
