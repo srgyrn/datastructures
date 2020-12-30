@@ -149,4 +149,9 @@ func Test_bst_search(t *testing.T) {
 	if !tree.search(8) {
 		t.Errorf("bst.search() failed")
 	}
+
+	tree = &bst{}
+	if tree.search(3) {
+		t.Errorf("bst.search() failed")
+	}
 }
