@@ -38,3 +38,21 @@ func (b *bst) insert(v int) {
 		}
 	}
 }
+
+func (b *bst) search(v int) bool {
+	curr := b.root
+
+	for curr != nil {
+		if v == curr.val {
+			return true
+		}
+
+		if v > curr.val {
+			curr = curr.right
+		} else {
+			curr = curr.left
+		}
+	}
+
+	return false
+}

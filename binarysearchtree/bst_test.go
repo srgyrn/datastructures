@@ -125,3 +125,28 @@ func Test_bst_insert(t *testing.T) {
 		})
 	}
 }
+
+func Test_bst_search(t *testing.T) {
+	tree := &bst{
+		root: &node{
+			val:  5,
+			left: &node{val: 4},
+			right: &node{
+				val:  7,
+				left: &node{val: 6},
+				right: &node{
+					val:  9,
+					left: &node{val: 8},
+				},
+			},
+		},
+	}
+
+	if tree.search(3) {
+		t.Errorf("bst.search() failed")
+	}
+
+	if !tree.search(8) {
+		t.Errorf("bst.search() failed")
+	}
+}
