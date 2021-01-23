@@ -57,6 +57,15 @@ func (b *bst) search(v int) bool {
 	return false
 }
 
+// Strategy for removing a node:
+//	- search for v
+//	- if v is a leaf then delete leaf v
+// 	- else if v has 1 child then bypass v
+//	- else replace v with successor
+//
+// Strategy for finding the successor:
+//	- if v has a right subtree, then find min(rightSubTree)
+//	- else traverse until you find a value greater than v
 func (b *bst) remove(v int) {
 	if !b.search(v) {
 		return
