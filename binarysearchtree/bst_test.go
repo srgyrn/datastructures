@@ -155,3 +155,256 @@ func Test_bst_search(t *testing.T) {
 		t.Errorf("bst.search() failed")
 	}
 }
+
+func Test_bst_remove(t *testing.T) {
+	tests := []struct {
+		name string
+		b    *bst
+		v    int
+		want *bst
+	}{
+		{
+			name: "remove leaf",
+			b:    getBigBtree(),
+			v:    77,
+			want: &bst{
+				root: &node{
+					val: 71,
+					left: &node{
+						val: 29,
+						left: &node{
+							val: 6,
+							right: &node{
+								val: 7,
+								right: &node{
+									val:  20,
+									left: &node{val: 18},
+								},
+							},
+						},
+						right: &node{
+							val: 66,
+							left: &node{
+								val:   53,
+								right: &node{val: 55},
+							},
+							right: &node{val: 68},
+						},
+					},
+					right: &node{
+						val:   83,
+						left:  nil,
+						right: &node{val: 87},
+					},
+				},
+			},
+		},
+		{
+			name: "remove leaf 2",
+			b:    getBigBtree(),
+			v:    55,
+			want: &bst{
+				root: &node{
+					val: 71,
+					left: &node{
+						val: 29,
+						left: &node{
+							val: 6,
+							right: &node{
+								val: 7,
+								right: &node{
+									val:  20,
+									left: &node{val: 18},
+								},
+							},
+						},
+						right: &node{
+							val: 66,
+							left: &node{
+								val:   53,
+								right: nil,
+							},
+							right: &node{val: 68},
+						},
+					},
+					right: &node{
+						val:   83,
+						left:  &node{val: 77},
+						right: &node{val: 87},
+					},
+				},
+			},
+		},
+		{
+			name: "remove node with one child",
+			b:    getBigBtree(),
+			v:    53,
+			want: &bst{
+				root: &node{
+					val: 71,
+					left: &node{
+						val: 29,
+						left: &node{
+							val: 6,
+							right: &node{
+								val: 7,
+								right: &node{
+									val:  20,
+									left: &node{val: 18},
+								},
+							},
+						},
+						right: &node{
+							val: 66,
+							left: &node{
+								val: 55,
+							},
+							right: &node{val: 68},
+						},
+					},
+					right: &node{
+						val:   83,
+						left:  &node{val: 77},
+						right: &node{val: 87},
+					},
+				},
+			},
+		},
+		{
+			name: "remove node with right subtree",
+			b:    getBigBtree(),
+			v:    29,
+			want: &bst{
+				root: &node{
+					val: 71,
+					left: &node{
+						val: 53,
+						left: &node{
+							val: 6,
+							right: &node{
+								val: 7,
+								right: &node{
+									val:  20,
+									left: &node{val: 18},
+								},
+							},
+						},
+						right: &node{
+							val: 66,
+							left: &node{
+								val: 55,
+							},
+							right: &node{val: 68},
+						},
+					},
+					right: &node{
+						val:   83,
+						left:  &node{val: 77},
+						right: &node{val: 87},
+					},
+				},
+			},
+		},
+		{
+			name: "remove child with no right subtree",
+			b: &bst{
+				root: &node{
+					val: 71,
+					left: &node{
+						val: 29,
+						left: &node{
+							val: 6,
+						},
+					},
+					right: &node{
+						val: 83,
+						left: &node{
+							val: 77,
+							left: &node{
+								val: 74,
+								left: &node{
+									val: 73,
+								},
+								right: &node{
+									val:  76,
+									left: &node{val: 75},
+								},
+							},
+						},
+						right: &node{val: 87},
+					},
+				},
+			},
+			v: 77,
+			want: &bst{
+				root: &node{
+					val: 71,
+					left: &node{
+						val: 29,
+						left: &node{
+							val: 6,
+						},
+					},
+					right: &node{
+						val: 83,
+						left: &node{
+							val: 74,
+							left: &node{
+								val: 73,
+							},
+							right: &node{
+								val:  76,
+								left: &node{val: 75},
+							},
+						},
+						right: &node{val: 87},
+					},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.b.remove(tt.v)
+
+			if !reflect.DeepEqual(tt.b, tt.want) {
+				t.Errorf("b.remove() failed")
+				return
+			}
+		})
+	}
+}
+
+func getBigBtree() *bst {
+	return &bst{
+		root: &node{
+			val: 71,
+			left: &node{
+				val: 29,
+				left: &node{
+					val: 6,
+					right: &node{
+						val: 7,
+						right: &node{
+							val:  20,
+							left: &node{val: 18},
+						},
+					},
+				},
+				right: &node{
+					val: 66,
+					left: &node{
+						val:   53,
+						right: &node{val: 55},
+					},
+					right: &node{val: 68},
+				},
+			},
+			right: &node{
+				val:   83,
+				left:  &node{val: 77},
+				right: &node{val: 87},
+			},
+		},
+	}
+}

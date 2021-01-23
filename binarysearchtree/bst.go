@@ -56,3 +56,84 @@ func (b *bst) search(v int) bool {
 
 	return false
 }
+
+func (b *bst) remove(v int) {
+	if !b.search(v) {
+		return
+	}
+
+	curr := b.root
+
+	for curr != nil {
+		if v > curr.val {
+			if v == curr.right.val {
+				break
+			}
+
+			curr = curr.right
+		} else {
+			if v == curr.left.val {
+				break
+			}
+
+			curr = curr.left
+		}
+	}
+
+	isLeaf := func(n *node) bool {
+		if n.left == nil && n.right == nil {
+			return true
+		}
+		return false
+	}
+
+	hasOneChild := func(n *node) (bool, *node) {
+		if n.right != nil && n.left == nil {
+			return isLeaf(n.right), n.right
+		} else if n.left != nil && n.right == nil {
+			return isLeaf(n.left), n.left
+		}
+
+		return false, nil
+	}
+
+	var vertex *node
+	if v > curr.val {
+		if isLeaf(curr.right) {
+			curr.right = nil
+			return
+		}
+		vertex = curr.right
+	} else {
+		if isLeaf(curr.left) {
+			curr.left = nil
+			return
+		}
+		vertex = curr.left
+	}
+
+	// if vertex has one child, assign it to sub-root
+	if res, child := hasOneChild(vertex); res {
+		*vertex = *child
+		return
+	}
+
+	//if vertex does not have a right subtree, assign the first greater ancestor its left subtree
+	if vertex.right == nil {
+		*vertex = *vertex.left
+		return
+	}
+
+	// if vertex has a right subtree, find min(right subtree) as successor
+	curr = vertex.right
+	for curr.left.left != nil {
+		curr = curr.left
+	}
+
+	// set successor val to node
+	vertex.val = curr.left.val
+	// if successor has a right subtree, assign it to its parent's left
+	if curr.left.right != nil {
+		curr.left = curr.left.right
+	}
+}
